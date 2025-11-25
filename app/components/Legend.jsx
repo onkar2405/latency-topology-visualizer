@@ -1,51 +1,48 @@
 "use client";
 
 export default function Legend() {
+  const providers = [
+    { name: "AWS", color: "#FF9900" },
+    { name: "GCP", color: "#4285F4" },
+    { name: "Azure", color: "#0080FF" },
+  ];
+
+  const latencyColors = [
+    { range: "0-50 ms", color: "#00FF00" },
+    { range: "50-100 ms", color: "#FFFF00" },
+    { range: "100-200 ms", color: "#FFA500" },
+    { range: "200+ ms", color: "#FF0000" },
+  ];
+
   return (
-    <div style={styles.container}>
-      <h4>Legend</h4>
+    <div className="legend-panel">
+      <h4 className="legend-title">Legend</h4>
 
-      <div style={styles.item}>
-        <span style={{ ...styles.dot, background: "#FFD700" }}></span>
-        AWS
+      <div className="legend-section">
+        <p className="legend-section-label">Cloud Providers</p>
+        {providers.map((p) => (
+          <div key={p.name} className="legend-item">
+            <span
+              className="legend-color-box"
+              style={{ backgroundColor: p.color }}
+            ></span>
+            <span>{p.name}</span>
+          </div>
+        ))}
       </div>
 
-      <div style={styles.item}>
-        <span style={{ ...styles.dot, background: "#1E90FF" }}></span>
-        GCP
-      </div>
-
-      <div style={styles.item}>
-        <span style={{ ...styles.dot, background: "#9b5de5" }}></span>
-        Azure
+      <div className="legend-section">
+        <p className="legend-section-label">Latency</p>
+        {latencyColors.map((l) => (
+          <div key={l.range} className="legend-item">
+            <span
+              className="legend-color-box"
+              style={{ backgroundColor: l.color }}
+            ></span>
+            <span>{l.range}</span>
+          </div>
+        ))}
       </div>
     </div>
   );
 }
-
-const styles = {
-  container: {
-    position: "absolute",
-    bottom: 30,
-    left: 20,
-    padding: "12px",
-    background: "rgba(0,0,0,0.7)",
-    borderRadius: "8px",
-    color: "#fff",
-    fontSize: "14px",
-    width: "140px",
-    fontFamily: "sans-serif",
-    zIndex: 10,
-  },
-  item: {
-    display: "flex",
-    alignItems: "center",
-    marginTop: "6px",
-    gap: "8px",
-  },
-  dot: {
-    width: "12px",
-    height: "12px",
-    borderRadius: "50%",
-  },
-};

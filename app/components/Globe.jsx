@@ -1,27 +1,42 @@
 "use client";
 
-import { Canvas } from "@react-three/fiber";
+import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 
 import Earth from "./Earth";
 import GlobeMarker from "./GlobeMarker";
 import CloudRegion from "./CloudRegion";
 import MarkerPopup from "./MarkerPopup";
 import Legend from "./Legend";
+import LatencyLine from "./LatencyLine";
+import ControlPanel from "./ControlPanel";
 
 import exchangeServers from "../lib/exchangeServerLocations";
 import cloudRegions from "../lib/cloudRegions";
 import { fetchLatency } from "../lib/latencyAPI";
-import LatencyLine from "./LatencyLine";
-import ProviderFilter from "./ProvideFilter";
 
 export default function Globe() {
   const [selected, setSelected] = useState(null);
   const [latencyData, setLatencyData] = useState([]);
-  const [regionSelected, setRegionSelected] = useState(null);
   const [providerFilter, setProviderFilter] = useState(["AWS", "GCP", "Azure"]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedExchange, setSelectedExchange] = useState("");
+  const [latencyRange, setLatencyRange] = useState("");
+  const [layers, setLayers] = useState({
+    "Real-Time": true,
+    Historical: true,
+    Regions: true,
+  });
 
+  const [metrics, setMetrics] = useState({
+    markers: 0,
+    latencyLines: 0,
+    regions: 0,
+    fps: 0,
+  });
+
+  // Precompute server positions
   const serverCoords = useMemo(
     () =>
       exchangeServers.map((srv) => {
@@ -41,6 +56,7 @@ export default function Globe() {
     []
   );
 
+  // Real-time latency polling
   useEffect(() => {
     const load = async () => setLatencyData(await fetchLatency());
     load();
@@ -48,46 +64,95 @@ export default function Globe() {
     return () => clearInterval(timer);
   }, []);
 
-  const toggleProvider = (p) => {
+  // Filtered markers
+  const filteredMarkers = serverCoords.filter(
+    (m) =>
+      (selectedExchange ? m.exchange === selectedExchange : true) &&
+      providerFilter.includes(m.provider) &&
+      (searchQuery
+        ? m.exchange.toLowerCase().includes(searchQuery.toLowerCase())
+        : true)
+  );
+
+  // Filtered latency
+  const filteredLatency = latencyData.filter((l) => {
+    if (selectedExchange && l.exchange !== selectedExchange) return false;
+    if (latencyRange) {
+      const [min, max] = latencyRange.split("-").map(Number);
+      return l.latency >= min && (max ? l.latency <= max : true);
+    }
+    return true;
+  });
+
+  // Filtered cloud regions
+  const filteredRegions = cloudRegions.filter((r) =>
+    providerFilter.includes(r.provider)
+  );
+
+  // Update metrics whenever filtered lists change
+  useEffect(() => {
+    setMetrics((prev) => ({
+      ...prev,
+      markers: filteredMarkers.length,
+      latencyLines: filteredLatency.length,
+      regions: filteredRegions.length,
+    }));
+  }, [filteredMarkers, filteredLatency, filteredRegions]);
+
+  // Toggle helpers
+  const toggleProvider = (p) =>
     setProviderFilter((prev) =>
       prev.includes(p) ? prev.filter((x) => x !== p) : [...prev, p]
     );
-  };
+  const toggleLayer = (key) =>
+    setLayers((prev) => ({ ...prev, [key]: !prev[key] }));
 
   return (
     <div style={{ width: "100%", height: "100vh", position: "relative" }}>
-      <MarkerPopup
-        data={selected || regionSelected}
-        onClose={() => {
-          setSelected(null);
-          setRegionSelected(null);
-        }}
-      />
+      {/* Popups & Legend */}
+      <MarkerPopup data={selected} onClose={() => setSelected(null)} />
       <Legend />
-      <ProviderFilter selected={providerFilter} onToggle={toggleProvider} />
 
+      {/* Control Panel */}
+      <ControlPanel
+        exchanges={exchangeServers.map((s) => s.exchange)}
+        providers={["AWS", "GCP", "Azure"]}
+        selectedExchange={selectedExchange}
+        onExchangeChange={setSelectedExchange}
+        selectedProviders={providerFilter}
+        onProviderToggle={toggleProvider}
+        latencyRange={latencyRange}
+        onLatencyRangeChange={setLatencyRange}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        layers={layers}
+        onLayerToggle={toggleLayer}
+        metrics={metrics}
+      />
+
+      {/* Canvas */}
       <Canvas camera={{ position: [0, 0, 5], fov: 45 }}>
         <ambientLight intensity={0.6} />
         <directionalLight position={[5, 5, 5]} intensity={1.2} />
 
+        {/* Globe */}
         <Earth />
 
-        {/* Exchange Markers */}
-        {serverCoords.map((item, idx) => (
+        {/* Markers */}
+        {filteredMarkers.map((m, idx) => (
           <GlobeMarker
             key={idx}
-            lat={item.lat}
-            lon={item.lon}
-            provider={item.provider}
-            data={item}
+            lat={m.lat}
+            lon={m.lon}
+            provider={m.provider}
+            data={m}
             onSelect={setSelected}
           />
         ))}
 
         {/* Cloud Regions */}
-        {cloudRegions
-          .filter((r) => providerFilter.includes(r.provider))
-          .map((r, idx) => (
+        {layers["Regions"] &&
+          filteredRegions.map((r, idx) => (
             <CloudRegion
               key={idx}
               lat={r.lat}
@@ -101,27 +166,63 @@ export default function Globe() {
                     s.lon === r.lon
                 ).length
               }
-              onClick={setRegionSelected}
+              onClick={setSelected}
             />
           ))}
 
         {/* Latency Lines */}
-        {latencyData.map((lat, idx) => {
-          const srv = serverCoords.find((s) => s.exchange === lat.exchange);
-          if (!srv) return null;
+        {layers["Real-Time"] &&
+          filteredLatency.map((l, idx) => {
+            const srv = filteredMarkers.find((s) => s.exchange === l.exchange);
+            if (!srv) return null;
+            return (
+              <LatencyLine
+                key={idx}
+                start={srv.position}
+                end={[0, 0, 0]}
+                latency={l.latency}
+              />
+            );
+          })}
 
-          return (
-            <LatencyLine
-              key={idx}
-              start={srv.position}
-              end={[0, 0, 0]} // placeholder
-              latency={lat.latency}
-            />
-          );
-        })}
+        {/* FPS & Metrics Updater */}
+        <MetricsUpdater
+          setMetrics={setMetrics}
+          markers={filteredMarkers.length}
+          latencyLines={filteredLatency.length}
+          regions={filteredRegions.length}
+        />
 
-        <OrbitControls />
+        {/* Camera Controls */}
+        <OrbitControls
+          enablePan={true}
+          enableZoom={true}
+          enableRotate={true}
+          rotateSpeed={0.4}
+          zoomSpeed={0.6}
+          panSpeed={0.5}
+          touchZoomSpeed={0.8}
+          touchRotateSpeed={0.4}
+        />
       </Canvas>
     </div>
   );
+}
+
+// ✅ MetricsUpdater Component
+function MetricsUpdater({ setMetrics, markers, latencyLines, regions }) {
+  const fpsRef = useRef(0);
+
+  useFrame((state) => {
+    fpsRef.current = state.clock.getElapsedTime();
+    setMetrics((prev) => ({
+      ...prev,
+      markers,
+      latencyLines,
+      regions,
+      fps: Math.round(state.gl.info.render.frame / Math.max(fpsRef.current, 1)),
+    }));
+  });
+
+  return null; // Does not render anything
 }
