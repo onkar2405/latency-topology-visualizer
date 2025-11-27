@@ -33,7 +33,12 @@ export default function GlobeMarker({ lat, lon, provider, data, onSelect }) {
       position={position}
       onClick={(e) => {
         e.stopPropagation();
-        onSelect(data);
+        // Get screen position of the click event
+        const screenPos = {
+          x: e.clientX || e.nativeEvent?.clientX || window.innerWidth / 2,
+          y: e.clientY || e.nativeEvent?.clientY || window.innerHeight / 2,
+        };
+        onSelect(data, screenPos);
       }}
       onPointerOver={(e) => {
         e.stopPropagation();

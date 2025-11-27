@@ -18,6 +18,7 @@ import { fetchLatency } from "../lib/latencyAPI";
 
 export default function Globe() {
   const [selected, setSelected] = useState(null);
+  const [selectedScreenPos, setSelectedScreenPos] = useState(null);
   const [latencyData, setLatencyData] = useState([]);
   const [providerFilter, setProviderFilter] = useState(["AWS", "GCP", "Azure"]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -60,7 +61,7 @@ export default function Globe() {
   useEffect(() => {
     const load = async () => setLatencyData(await fetchLatency());
     load();
-    const timer = setInterval(load, 5000);
+    const timer = setInterval(load, 5000000);
     return () => clearInterval(timer);
   }, []);
 
@@ -110,7 +111,12 @@ export default function Globe() {
   return (
     <div style={{ width: "100%", height: "100vh", position: "relative" }}>
       {/* Popups & Legend */}
-      <MarkerPopup data={selected} onClose={() => setSelected(null)} />
+      <MarkerPopup
+        data={
+          selected ? { ...selected, screenPosition: selectedScreenPos } : null
+        }
+        onClose={() => setSelected(null)}
+      />
       <Legend />
 
       {/* Control Panel */}
@@ -146,7 +152,10 @@ export default function Globe() {
             lon={m.lon}
             provider={m.provider}
             data={m}
-            onSelect={setSelected}
+            onSelect={(data, screenPos) => {
+              setSelected(data);
+              setSelectedScreenPos(screenPos);
+            }}
           />
         ))}
 
@@ -166,7 +175,10 @@ export default function Globe() {
                     s.lon === r.lon
                 ).length
               }
-              onClick={setSelected}
+              onClick={(data, screenPos) => {
+                setSelected(data);
+                setSelectedScreenPos(screenPos);
+              }}
             />
           ))}
 

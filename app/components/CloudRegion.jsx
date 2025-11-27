@@ -31,7 +31,13 @@ export default function CloudRegion({
   return (
     <mesh
       position={position}
-      onClick={() => onClick({ provider, lat, lon, serverCount })}
+      onClick={(e) => {
+        const screenPos = {
+          x: e.clientX || e.nativeEvent?.clientX || window.innerWidth / 2,
+          y: e.clientY || e.nativeEvent?.clientY || window.innerHeight / 2,
+        };
+        onClick({ provider, lat, lon, serverCount }, screenPos);
+      }}
     >
       <sphereGeometry args={[0.15, 32, 32]} />
       <meshStandardMaterial color={color} transparent opacity={0.5} />
