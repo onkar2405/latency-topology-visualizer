@@ -1,4 +1,5 @@
 "use client";
+import CollapsiblePanel from "./common/CollapsiblePanel";
 
 export default function Legend() {
   const providers = [
@@ -16,33 +17,37 @@ export default function Legend() {
 
   return (
     <div className="legend-panel">
-      <h4 className="legend-title">Legend</h4>
+      <CollapsiblePanel
+        title="Legend"
+        id="legend-panel-content"
+        titleElement="h4"
+      >
+        <div className="legend-section">
+          <p className="legend-section-label">Cloud Providers</p>
+          {providers.map((p) => (
+            <div key={p.name} className="legend-item">
+              <span
+                className="legend-color-box"
+                style={{ backgroundColor: p.color }}
+              ></span>
+              <span>{p.name}</span>
+            </div>
+          ))}
+        </div>
 
-      <div className="legend-section">
-        <p className="legend-section-label">Cloud Providers</p>
-        {providers.map((p) => (
-          <div key={p.name} className="legend-item">
-            <span
-              className="legend-color-box"
-              style={{ backgroundColor: p.color }}
-            ></span>
-            <span>{p.name}</span>
-          </div>
-        ))}
-      </div>
-
-      <div className="legend-section">
-        <p className="legend-section-label">Latency</p>
-        {latencyColors.map((l) => (
-          <div key={l.range} className="legend-item">
-            <span
-              className="legend-color-box"
-              style={{ backgroundColor: l.color }}
-            ></span>
-            <span>{l.range}</span>
-          </div>
-        ))}
-      </div>
+        <div className="legend-section">
+          <p className="legend-section-label">Latency</p>
+          {latencyColors.map((l) => (
+            <div key={l.range} className="legend-item">
+              <span
+                className="legend-color-box"
+                style={{ backgroundColor: l.color }}
+              ></span>
+              <span>{l.range}</span>
+            </div>
+          ))}
+        </div>
+      </CollapsiblePanel>
     </div>
   );
 }
