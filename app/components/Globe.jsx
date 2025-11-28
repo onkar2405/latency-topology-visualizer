@@ -16,6 +16,7 @@ import { useTheme } from "../context/ThemeContext";
 import exchangeServers from "../lib/exchangeServerLocations";
 import cloudRegions from "../lib/cloudRegions";
 import { fetchLatency } from "../lib/latencyAPI";
+import "./styles/Globe.css";
 
 export default function Globe() {
   const theme = useTheme();
@@ -132,14 +133,7 @@ export default function Globe() {
     setLayers((prev) => ({ ...prev, [key]: !prev[key] }));
 
   return (
-    <div
-      style={{
-        width: "100%",
-        height: "100vh",
-        position: "relative",
-        backgroundColor: theme.bg.primary,
-      }}
-    >
+    <div className="container" style={{ backgroundColor: theme.bg.primary }}>
       {/* Popups & Legend */}
       <MarkerPopup
         data={

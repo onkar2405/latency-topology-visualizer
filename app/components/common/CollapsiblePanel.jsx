@@ -1,5 +1,6 @@
 "use client";
 import { useState, useId } from "react";
+import "../styles/CollapsiblePanel.css";
 
 export default function CollapsiblePanel({
   title,
@@ -14,12 +15,12 @@ export default function CollapsiblePanel({
   const contentId = id || `collapsible-${uid}`;
 
   return (
-    <div className="collapsible-panel">
-      <div className="panel-header">
-        <TitleTag className="panel-title">{title}</TitleTag>
+    <div className="collapsiblePanel">
+      <div className="panelHeader">
+        <TitleTag className="panelTitle">{title}</TitleTag>
 
         <button
-          className="toggle-button"
+          className="toggleButton"
           onClick={() => setCollapsed((s) => !s)}
           aria-expanded={!collapsed}
           aria-controls={contentId}
@@ -63,7 +64,7 @@ export default function CollapsiblePanel({
 
       <div
         id={contentId}
-        className={`panel-content ${collapsed ? "collapsed" : ""}`}
+        className={`panelContent ${collapsed ? "collapsed" : ""}`}
       >
         {children}
       </div>

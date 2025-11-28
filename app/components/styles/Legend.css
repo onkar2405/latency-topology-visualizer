@@ -1,0 +1,64 @@
+.legendPanel {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  border-radius: 8px;
+  padding: 12px;
+  width: 240px;
+  z-index: 15;
+  font-family: sans-serif;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--panel-border);
+}
+
+.heading {
+  margin: 0 0 12px 0;
+  color: var(--text-accent);
+  font-size: 14px;
+}
+
+.legendSection {
+  margin-bottom: 12px;
+}
+.legendSectionLabel {
+  margin: 0 0 8px 0;
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  margin-bottom: 6px;
+  font-size: 12px;
+}
+
+.legendColorBox {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  margin-right: 8px;
+}
+
+/* Provider specific colors */
+.aws {
+  background-color: #ffd700;
+}
+.gcp {
+  background-color: #1e90ff;
+}
+.azure {
+  background-color: #9b5de5;
+}
+
+/* Latency color classes */
+.latencyLow {
+  background-color: #00ff6a;
+}
+.latencyMid {
+  background-color: #ffd700;
+}
+.latencyHigh {
+  background-color: #ff4444;
+}

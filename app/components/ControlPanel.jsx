@@ -1,6 +1,7 @@
 "use client";
 import CollapsiblePanel from "./common/CollapsiblePanel";
 import { useTheme } from "../context/ThemeContext";
+import "./styles/ControlPanel.css";
 
 export default function ControlPanel({
   exchanges,
@@ -22,57 +23,23 @@ export default function ControlPanel({
 
   return (
     <div
-      className="control-panel"
+      className="controlPanel"
       style={{
         background: theme.ui.panel,
         color: theme.text.primary,
-        borderColor: theme.ui.border,
-        borderRadius: "8px",
-        padding: "16px",
-        left: "20px",
-        top: "20px",
-        width: "320px",
-        maxHeight: "80vh",
-        overflowY: "auto",
-        position: "fixed",
-        zIndex: 10,
-        fontFamily: "sans-serif",
-        boxShadow: "0 4px 12px rgba(0,0,0,0.5)",
-        border: `1px solid ${theme.ui.border}`,
-        scrollbarWidth: "none",
-        msOverflowStyle: "none",
+        // expose theme values to CSS via variables
+        ["--panel-border"]: theme.ui.border,
+        ["--text-primary"]: theme.text.primary,
+        ["--text-secondary"]: theme.text.secondary,
+        ["--text-accent"]: theme.text.accent,
+        ["--bg-secondary"]: theme.bg.secondary,
       }}
     >
-      {/* Hide scrollbar for webkit browsers */}
-      <style>{`
-        .control-panel::-webkit-scrollbar {
-          display: none;
-        }
-      `}</style>
-
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "16px",
-        }}
-      >
-        <h2 style={{ margin: 0, color: theme.text.accent, fontSize: "18px" }}>
-          Controls
-        </h2>
+      <div className="header">
+        <h2 className="title">Controls</h2>
         <button
           onClick={theme.toggleTheme}
-          style={{
-            background: theme.bg.secondary,
-            color: theme.text.primary,
-            border: `1px solid ${theme.ui.border}`,
-            borderRadius: "6px",
-            padding: "8px 12px",
-            cursor: "pointer",
-            fontSize: "14px",
-            fontWeight: "bold",
-          }}
+          className="themeToggle"
           title="Toggle dark/light mode"
         >
           {theme.isDark ? "☀️ Light" : "🌙 Dark"}
@@ -85,51 +52,23 @@ export default function ControlPanel({
         titleElement="h3"
       >
         {/* Search */}
-        <div className="panel-section" style={{ marginBottom: "12px" }}>
+        <div className="panelSection">
           <input
             type="text"
             placeholder="Search exchanges/regions..."
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="input-field"
-            style={{
-              background: theme.bg.secondary,
-              color: theme.text.primary,
-              border: `1px solid ${theme.ui.border}`,
-              borderRadius: "4px",
-              padding: "8px",
-              width: "100%",
-              boxSizing: "border-box",
-            }}
+            className="inputField"
           />
         </div>
 
         {/* Exchange Selector */}
-        <div className="panel-section" style={{ marginBottom: "12px" }}>
-          <label
-            className="section-label"
-            style={{
-              color: theme.text.secondary,
-              fontSize: "12px",
-              fontWeight: "bold",
-            }}
-          >
-            Exchange
-          </label>
+        <div className="panelSection">
+          <label className="sectionLabel">Exchange</label>
           <select
             value={selectedExchange}
             onChange={(e) => onExchangeChange(e.target.value)}
-            className="input-field"
-            style={{
-              background: theme.bg.secondary,
-              color: theme.text.primary,
-              border: `1px solid ${theme.ui.border}`,
-              borderRadius: "4px",
-              padding: "8px",
-              width: "100%",
-              boxSizing: "border-box",
-              marginTop: "4px",
-            }}
+            className="inputField mt4"
           >
             <option value="">All</option>
             {exchanges.map((ex) => (
@@ -141,159 +80,58 @@ export default function ControlPanel({
         </div>
 
         {/* Cloud Provider Filter */}
-        <div className="panel-section" style={{ marginBottom: "12px" }}>
-          <label
-            className="section-label"
-            style={{
-              color: theme.text.secondary,
-              fontSize: "12px",
-              fontWeight: "bold",
-            }}
-          >
-            Providers
-          </label>
+        <div className="panelSection">
+          <label className="sectionLabel">Providers</label>
           {providers.map((p) => (
-            <label
-              key={p}
-              className="checkbox-label"
-              style={{
-                display: "block",
-                marginTop: "6px",
-                color: theme.text.primary,
-              }}
-            >
+            <label key={p} className="checkboxLabel">
               <input
                 type="checkbox"
                 checked={selectedProviders.includes(p)}
                 onChange={() => onProviderToggle(p)}
               />
-              <span style={{ marginLeft: "6px" }}>{p}</span>
+              <span className="spaced">{p}</span>
             </label>
           ))}
         </div>
 
         {/* Latency Filter */}
-        <div className="panel-section" style={{ marginBottom: "12px" }}>
-          <label
-            className="section-label"
-            style={{
-              color: theme.text.secondary,
-              fontSize: "12px",
-              fontWeight: "bold",
-            }}
-          >
-            Latency Range (ms)
-          </label>
+        <div className="panelSection">
+          <label className="sectionLabel">Latency Range (ms)</label>
           {latencyOptions.map((r) => (
-            <label
-              key={r}
-              className="radio-label"
-              style={{
-                display: "block",
-                marginTop: "6px",
-                color: theme.text.primary,
-              }}
-            >
+            <label key={r} className="radioLabel">
               <input
                 type="radio"
                 name="latencyRange"
                 checked={latencyRange === r}
                 onChange={() => onLatencyRangeChange(r)}
               />
-              <span style={{ marginLeft: "6px" }}>{r}</span>
+              <span className="spaced">{r}</span>
             </label>
           ))}
         </div>
 
         {/* Visualization Layers */}
-        <div className="panel-section" style={{ marginBottom: "12px" }}>
-          <label
-            className="section-label"
-            style={{
-              color: theme.text.secondary,
-              fontSize: "12px",
-              fontWeight: "bold",
-            }}
-          >
-            Visualization Layers
-          </label>
+        <div className="panelSection">
+          <label className="sectionLabel">Visualization Layers</label>
           {Object.keys(layers).map((key) => (
-            <label
-              key={key}
-              className="checkbox-label"
-              style={{
-                display: "block",
-                marginTop: "6px",
-                color: theme.text.primary,
-              }}
-            >
+            <label key={key} className="checkboxLabel">
               <input
                 type="checkbox"
                 checked={layers[key]}
                 onChange={() => onLayerToggle(key)}
               />
-              <span style={{ marginLeft: "6px" }}>{key}</span>
+              <span className="spaced">{key}</span>
             </label>
           ))}
         </div>
 
         {/* Performance Metrics */}
-        <div
-          className="panel-section metrics-section"
-          style={{
-            background: theme.bg.secondary,
-            padding: "10px",
-            borderRadius: "4px",
-            marginTop: "12px",
-            border: `1px solid ${theme.ui.border}`,
-          }}
-        >
-          <label
-            className="section-label"
-            style={{
-              color: theme.text.secondary,
-              fontSize: "12px",
-              fontWeight: "bold",
-            }}
-          >
-            Performance Metrics
-          </label>
-          <p
-            style={{
-              margin: "4px 0",
-              fontSize: "12px",
-              color: theme.text.secondary,
-            }}
-          >
-            Markers: {metrics.markers}
-          </p>
-          <p
-            style={{
-              margin: "4px 0",
-              fontSize: "12px",
-              color: theme.text.secondary,
-            }}
-          >
-            Latency Lines: {metrics.latencyLines}
-          </p>
-          <p
-            style={{
-              margin: "4px 0",
-              fontSize: "12px",
-              color: theme.text.secondary,
-            }}
-          >
-            Regions: {metrics.regions}
-          </p>
-          <p
-            style={{
-              margin: "4px 0",
-              fontSize: "12px",
-              color: theme.text.secondary,
-            }}
-          >
-            FPS: {metrics.fps}
-          </p>
+        <div className={`panelSection metricsSection`}>
+          <label className="sectionLabel">Performance Metrics</label>
+          <p className="metricsText">Markers: {metrics.markers}</p>
+          <p className="metricsText">Latency Lines: {metrics.latencyLines}</p>
+          <p className="metricsText">Regions: {metrics.regions}</p>
+          <p className="metricsText">FPS: {metrics.fps}</p>
         </div>
       </CollapsiblePanel>
     </div>

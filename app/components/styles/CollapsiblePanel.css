@@ -1,0 +1,33 @@
+.collapsiblePanel {
+  width: 100%;
+}
+
+.panelHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.panelTitle {
+  margin: 0;
+  font-size: 14px;
+}
+
+.toggleButton {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.panelContent {
+  transition: max-height 0.18s ease;
+  overflow: hidden;
+}
+
+.collapsed {
+  max-height: 0;
+}

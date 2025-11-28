@@ -2,11 +2,12 @@
 
 import { Line } from "react-chartjs-2";
 import { Chart as ChartJS } from "chart.js/auto";
+import "./styles/LatencyChart.css";
 
 export default function LatencyChart({ history }) {
   if (!history || history.length === 0) {
     return (
-      <div style={styles.container}>
+      <div className="container">
         <h3>No data yet</h3>
       </div>
     );
@@ -36,12 +37,12 @@ export default function LatencyChart({ history }) {
   };
 
   return (
-    <div style={styles.container}>
+    <div className="container">
       <h3>Historical Latency</h3>
 
       <Line data={data} height={100} />
 
-      <div style={styles.stats}>
+      <div className="stats">
         <p>
           <strong>Min:</strong> {min} ms
         </p>
@@ -56,23 +57,4 @@ export default function LatencyChart({ history }) {
   );
 }
 
-const styles = {
-  container: {
-    position: "absolute",
-    right: 20,
-    top: 20,
-    width: "360px",
-    padding: "16px",
-    background: "rgba(0,0,0,0.75)",
-    color: "#fff",
-    borderRadius: "8px",
-    zIndex: 20,
-    fontFamily: "sans-serif",
-  },
-  stats: {
-    marginTop: "12px",
-    fontSize: "14px",
-    display: "flex",
-    justifyContent: "space-between",
-  },
-};
+// visuals are controlled via CSS; background color can be set with inline style where needed

@@ -1,0 +1,35 @@
+.popup {
+  position: fixed;
+  padding: 16px;
+  border-radius: 8px;
+  width: 280px;
+  font-family: sans-serif;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
+  border: 1px solid var(--panel-border);
+  backdrop-filter: blur(8px);
+}
+
+.closeBtn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 0 4px;
+}
+
+.title {
+  margin: 0 0 12px 0;
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--title-accent, #ffd700);
+}
+
+.text {
+  margin: 8px 0;
+  font-size: 13px;
+  line-height: 1.4;
+}

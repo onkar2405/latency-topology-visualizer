@@ -1,0 +1,24 @@
+.container {
+  position: absolute;
+  right: 20px;
+  top: 350px;
+  z-index: 30;
+  display: flex;
+  gap: 8px;
+}
+
+.btn {
+  padding: 6px 10px;
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.btnActive {
+  background: #4dc9f6;
+}
+.btnInactive {
+  background: #333;
+}

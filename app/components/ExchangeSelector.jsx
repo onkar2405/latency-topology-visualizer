@@ -1,11 +1,12 @@
 "use client";
+import "./styles/ExchangeSelector.css";
 
 export default function ExchangeSelector({ exchanges, selected, onChange }) {
   return (
     <select
       value={selected}
       onChange={(e) => onChange(e.target?.value)}
-      style={styles.dropdown}
+      className="dropdown"
     >
       {exchanges.map((e) => (
         <option key={e} value={e}>
@@ -15,15 +16,3 @@ export default function ExchangeSelector({ exchanges, selected, onChange }) {
     </select>
   );
 }
-
-const styles = {
-  dropdown: {
-    position: "absolute",
-    right: 20,
-    top: 300,
-    zIndex: 30,
-    padding: "8px",
-    borderRadius: "6px",
-    fontSize: "14px",
-  },
-};

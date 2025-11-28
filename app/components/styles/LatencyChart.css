@@ -1,0 +1,17 @@
+.container {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  width: 360px;
+  padding: 16px;
+  border-radius: 8px;
+  z-index: 20;
+  font-family: sans-serif;
+}
+
+.stats {
+  margin-top: 12px;
+  font-size: 14px;
+  display: flex;
+  justify-content: space-between;
+}

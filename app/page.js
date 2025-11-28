@@ -1,8 +1,9 @@
 import Globe from "./components/Globe";
+import "./page.css";
 
 export default function Home() {
   return (
-    <main style={{ height: "100vh", overflow: "hidden" }}>
+    <main className="main">
       <Globe />
     </main>
   );
