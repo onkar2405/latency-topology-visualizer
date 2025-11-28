@@ -35,6 +35,41 @@ const exchangeServers = [
     lat: 51.5074,
     lon: -0.1278,
   },
+  {
+    exchange: "Huobi",
+    provider: "AWS",
+    region: "Hong Kong (ap-east-1)",
+    lat: 22.3193,
+    lon: 114.1694,
+  },
+  {
+    exchange: "Coinbase",
+    provider: "GCP",
+    region: "US East (us-east-1)",
+    lat: 37.24,
+    lon: -76.5,
+  },
+  {
+    exchange: "Kraken",
+    provider: "Azure",
+    region: "London (uksouth)",
+    lat: 51.5074,
+    lon: -0.1278,
+  },
+  {
+    exchange: "Bitstamp",
+    provider: "AWS",
+    region: "Dublin (eu-west-1)",
+    lat: 53.3498,
+    lon: -6.2603,
+  },
+  {
+    exchange: "Gate.io",
+    provider: "GCP",
+    region: "São Paulo (southamerica-east1)",
+    lat: -23.5505,
+    lon: -46.6333,
+  },
 ];
 
 export default exchangeServers;

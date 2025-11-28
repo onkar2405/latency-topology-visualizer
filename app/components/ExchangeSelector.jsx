@@ -4,7 +4,7 @@ export default function ExchangeSelector({ exchanges, selected, onChange }) {
   return (
     <select
       value={selected}
-      onChange={(e) => onChange(e.target.value)}
+      onChange={(e) => onChange(e.target?.value)}
       style={styles.dropdown}
     >
       {exchanges.map((e) => (

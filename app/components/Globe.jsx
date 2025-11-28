@@ -11,12 +11,14 @@ import MarkerPopup from "./MarkerPopup";
 import Legend from "./Legend";
 import LatencyLine from "./LatencyLine";
 import ControlPanel from "./ControlPanel";
+import { useTheme } from "../context/ThemeContext";
 
 import exchangeServers from "../lib/exchangeServerLocations";
 import cloudRegions from "../lib/cloudRegions";
 import { fetchLatency } from "../lib/latencyAPI";
 
 export default function Globe() {
+  const theme = useTheme();
   const [selected, setSelected] = useState(null);
   const [selectedScreenPos, setSelectedScreenPos] = useState(null);
   const [latencyData, setLatencyData] = useState([]);
@@ -57,11 +59,32 @@ export default function Globe() {
     []
   );
 
+  // Precompute cloud region positions (same sphere radius)
+  const regionCoords = useMemo(
+    () =>
+      cloudRegions.map((r) => {
+        const radius = 2.05;
+        const phi = (90 - r.lat) * (Math.PI / 180);
+        const theta = (r.lon + 180) * (Math.PI / 180);
+
+        return {
+          ...r,
+          position: [
+            -(radius * Math.sin(phi) * Math.cos(theta)),
+            radius * Math.cos(phi),
+            radius * Math.sin(phi) * Math.sin(theta),
+          ],
+        };
+      }),
+    []
+  );
+
   // Real-time latency polling
   useEffect(() => {
     const load = async () => setLatencyData(await fetchLatency());
     load();
-    const timer = setInterval(load, 5000000);
+    // poll every 5 seconds
+    const timer = setInterval(load, 5000);
     return () => clearInterval(timer);
   }, []);
 
@@ -109,15 +132,23 @@ export default function Globe() {
     setLayers((prev) => ({ ...prev, [key]: !prev[key] }));
 
   return (
-    <div style={{ width: "100%", height: "100vh", position: "relative" }}>
+    <div
+      style={{
+        width: "100%",
+        height: "100vh",
+        position: "relative",
+        backgroundColor: theme.bg.primary,
+      }}
+    >
       {/* Popups & Legend */}
       <MarkerPopup
         data={
           selected ? { ...selected, screenPosition: selectedScreenPos } : null
         }
         onClose={() => setSelected(null)}
+        theme={theme}
       />
-      <Legend />
+      <Legend theme={theme} />
 
       {/* Control Panel */}
       <ControlPanel
@@ -134,6 +165,7 @@ export default function Globe() {
         layers={layers}
         onLayerToggle={toggleLayer}
         metrics={metrics}
+        theme={theme}
       />
 
       {/* Canvas */}
@@ -153,7 +185,10 @@ export default function Globe() {
             provider={m.provider}
             data={m}
             onSelect={(data, screenPos) => {
-              setSelected(data);
+              const latencyEntry = latencyData.find(
+                (l) => l.exchange === data.exchange
+              );
+              setSelected({ ...data, ...(latencyEntry || {}) });
               setSelectedScreenPos(screenPos);
             }}
           />
@@ -176,7 +211,20 @@ export default function Globe() {
                 ).length
               }
               onClick={(data, screenPos) => {
-                setSelected(data);
+                // Build latencies for servers in this region
+                const relatedServers = exchangeServers.filter(
+                  (s) =>
+                    s.provider === r.provider &&
+                    s.lat === r.lat &&
+                    s.lon === r.lon
+                );
+                const latencies = relatedServers.map((s) => ({
+                  exchange: s.exchange,
+                  provider: s.provider,
+                  ...(latencyData.find((l) => l.exchange === s.exchange) || {}),
+                }));
+
+                setSelected({ ...r, latencies });
                 setSelectedScreenPos(screenPos);
               }}
             />
@@ -187,12 +235,38 @@ export default function Globe() {
           filteredLatency.map((l, idx) => {
             const srv = filteredMarkers.find((s) => s.exchange === l.exchange);
             if (!srv) return null;
+
+            // find nearest cloud region for this server (prefer same provider)
+            let endPos = [0, 0, 0];
+            const sameProviderRegions = regionCoords.filter(
+              (r) => r.provider === srv.provider
+            );
+            const candidates = sameProviderRegions.length
+              ? sameProviderRegions
+              : regionCoords;
+            if (candidates.length) {
+              let best = candidates[0];
+              let bestDist = Infinity;
+              for (const rc of candidates) {
+                const d =
+                  (rc.position[0] - srv.position[0]) ** 2 +
+                  (rc.position[1] - srv.position[1]) ** 2 +
+                  (rc.position[2] - srv.position[2]) ** 2;
+                if (d < bestDist) {
+                  bestDist = d;
+                  best = rc;
+                }
+              }
+              endPos = best.position;
+            }
+
             return (
               <LatencyLine
                 key={idx}
                 start={srv.position}
-                end={[0, 0, 0]}
+                end={endPos}
                 latency={l.latency}
+                showPulse={true}
               />
             );
           })}

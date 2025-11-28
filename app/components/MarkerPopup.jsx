@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-export default function MarkerPopup({ data, onClose }) {
+export default function MarkerPopup({ data, onClose, theme }) {
   const [position, setPosition] = useState({ top: 20, right: 20 });
 
   // Dynamically position the popup near the clicked region
@@ -23,6 +23,9 @@ export default function MarkerPopup({ data, onClose }) {
     <div
       style={{
         ...styles.popup,
+        background: theme?.ui.panel || "rgba(0,0,0,0.95)",
+        color: theme?.text.primary || "#fff",
+        borderColor: theme?.ui.border || "#444",
         top: position.top,
         right: position.right,
       }}
