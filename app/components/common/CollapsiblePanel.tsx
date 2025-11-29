@@ -1,6 +1,6 @@
 "use client";
 import { useState, useId } from "react";
-import "../styles/CollapsiblePanel.css";
+import "../../styles/CollapsiblePanel.css";
 
 export default function CollapsiblePanel({
   title,
@@ -10,7 +10,7 @@ export default function CollapsiblePanel({
   titleElement = "h3",
 }) {
   const [collapsed, setCollapsed] = useState(defaultCollapsed);
-  const TitleTag = titleElement;
+  const TitleTag: any = titleElement;
   const uid = useId();
   const contentId = id || `collapsible-${uid}`;
 

@@ -18,7 +18,7 @@ export default function CloudRegion({
       -(radius * Math.sin(phi) * Math.cos(theta)),
       radius * Math.cos(phi),
       radius * Math.sin(phi) * Math.sin(theta),
-    ];
+    ] as [number, number, number];
   }, [lat, lon]);
 
   const color =
@@ -30,7 +30,7 @@ export default function CloudRegion({
 
   return (
     <mesh
-      position={position}
+      position={position as [number, number, number]}
       onClick={(e) => {
         const screenPos = {
           x: e.clientX || e.nativeEvent?.clientX || window.innerWidth / 2,

@@ -2,9 +2,9 @@
 
 import { createContext, useContext, useState, useEffect } from "react";
 
-const ThemeContext = createContext();
+const ThemeContext = createContext<any>(null);
 
-export function ThemeProvider({ children }) {
+export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [isDark, setIsDark] = useState(true);
   const [mounted, setMounted] = useState(false);
 

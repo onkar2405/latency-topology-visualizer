@@ -1,9 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import "./styles/MarkerPopup.css";
+import "../styles/MarkerPopup.css";
 
-export default function MarkerPopup({ data, onClose, theme }) {
+export default function MarkerPopup({
+  data,
+  onClose,
+  theme,
+}: {
+  data: any;
+  onClose: any;
+  theme?: any;
+}) {
   const [position, setPosition] = useState({ top: 20, right: 20 });
 
   // Dynamically position the popup near the clicked region
@@ -22,14 +30,16 @@ export default function MarkerPopup({ data, onClose, theme }) {
   return (
     <div
       className="popup"
-      style={{
-        background: theme?.ui.panel || "rgba(0,0,0,0.95)",
-        color: theme?.text.primary || "#fff",
-        ["--panel-border"]: theme?.ui.border || "#444",
-        ["--title-accent"]: theme?.text.accent || "#ffd700",
-        top: position.top,
-        right: position.right,
-      }}
+      style={
+        {
+          background: theme?.ui.panel || "rgba(0,0,0,0.95)",
+          color: theme?.text.primary || "#fff",
+          ["--panel-border"]: theme?.ui.border || "#444",
+          ["--title-accent"]: theme?.text.accent || "#ffd700",
+          top: position.top,
+          right: position.right,
+        } as any
+      }
     >
       <button className="closeBtn" onClick={onClose}>
         ×

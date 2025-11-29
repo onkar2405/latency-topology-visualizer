@@ -16,7 +16,7 @@ import { useTheme } from "../context/ThemeContext";
 import exchangeServers from "../lib/exchangeServerLocations";
 import cloudRegions from "../lib/cloudRegions";
 import { fetchLatency } from "../lib/latencyAPI";
-import "./styles/Globe.css";
+import "../styles/Globe.css";
 
 export default function Globe() {
   const theme = useTheme();
@@ -140,9 +140,8 @@ export default function Globe() {
           selected ? { ...selected, screenPosition: selectedScreenPos } : null
         }
         onClose={() => setSelected(null)}
-        theme={theme}
       />
-      <Legend theme={theme} />
+      <Legend />
 
       {/* Control Panel */}
       <ControlPanel
@@ -159,7 +158,6 @@ export default function Globe() {
         layers={layers}
         onLayerToggle={toggleLayer}
         metrics={metrics}
-        theme={theme}
       />
 
       {/* Canvas */}
@@ -281,8 +279,6 @@ export default function Globe() {
           rotateSpeed={0.4}
           zoomSpeed={0.6}
           panSpeed={0.5}
-          touchZoomSpeed={0.8}
-          touchRotateSpeed={0.4}
         />
       </Canvas>
     </div>

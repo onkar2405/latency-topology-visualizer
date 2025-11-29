@@ -1,7 +1,7 @@
 "use client";
 import CollapsiblePanel from "./common/CollapsiblePanel";
 import { useTheme } from "../context/ThemeContext";
-import "./styles/Legend.css";
+import "../styles/Legend.css";
 
 export default function Legend() {
   const theme = useTheme();
@@ -20,13 +20,15 @@ export default function Legend() {
   return (
     <div
       className="legendPanel"
-      style={{
-        background: theme.ui.panel,
-        color: theme.text.primary,
-        ["--panel-border"]: theme.ui.border,
-        ["--text-accent"]: theme.text.accent,
-        ["--text-secondary"]: theme.text.secondary,
-      }}
+      style={
+        {
+          background: theme.ui.panel,
+          color: theme.text.primary,
+          ["--panel-border"]: theme.ui.border,
+          ["--text-accent"]: theme.text.accent,
+          ["--text-secondary"]: theme.text.secondary,
+        } as any
+      }
     >
       <h4 className="heading">Legend</h4>
 

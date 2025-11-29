@@ -1,7 +1,7 @@
 "use client";
 import CollapsiblePanel from "./common/CollapsiblePanel";
 import { useTheme } from "../context/ThemeContext";
-import "./styles/ControlPanel.css";
+import "../styles/ControlPanel.css";
 
 export default function ControlPanel({
   exchanges,
@@ -24,16 +24,18 @@ export default function ControlPanel({
   return (
     <div
       className="controlPanel"
-      style={{
-        background: theme.ui.panel,
-        color: theme.text.primary,
-        // expose theme values to CSS via variables
-        ["--panel-border"]: theme.ui.border,
-        ["--text-primary"]: theme.text.primary,
-        ["--text-secondary"]: theme.text.secondary,
-        ["--text-accent"]: theme.text.accent,
-        ["--bg-secondary"]: theme.bg.secondary,
-      }}
+      style={
+        {
+          background: theme.ui.panel,
+          color: theme.text.primary,
+          // expose theme values to CSS via variables
+          ["--panel-border"]: theme.ui.border,
+          ["--text-primary"]: theme.text.primary,
+          ["--text-secondary"]: theme.text.secondary,
+          ["--text-accent"]: theme.text.accent,
+          ["--bg-secondary"]: theme.bg.secondary,
+        } as any
+      }
     >
       <div className="header">
         <h2 className="title">Controls</h2>

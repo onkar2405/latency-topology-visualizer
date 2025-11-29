@@ -17,7 +17,11 @@ export const metadata = {
   description: "Real-time latency visualization with network topology",
 };
 
-export default function RootLayout({ children }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
       <body

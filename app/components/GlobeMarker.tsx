@@ -30,7 +30,7 @@ export default function GlobeMarker({ lat, lon, provider, data, onSelect }) {
 
   return (
     <mesh
-      position={position}
+      position={position as [number, number, number]}
       onClick={(e) => {
         e.stopPropagation();
         // Get screen position of the click event

@@ -1,5 +1,5 @@
 "use client";
-import "./styles/ProviderFilter.css";
+import "../styles/ProviderFilter.css";
 
 export default function ProviderFilter({ selected, onToggle }) {
   const providers = ["AWS", "GCP", "Azure"];

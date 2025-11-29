@@ -2,14 +2,12 @@ export async function fetchLatency() {
   console.log("Fetching latency data from backend API...");
 
   try {
-    // Call your own backend API route instead of calling Cloudflare directly
-    // This avoids CORS issues since server-to-server calls don't have CORS restrictions
     const res = await fetch("/api/latency", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
-      cache: "no-store", // Ensure fresh data on each request
+      cache: "no-store",
     });
 
     if (!res.ok) {
@@ -30,7 +28,6 @@ export async function fetchLatency() {
   } catch (error) {
     console.error("Error fetching latency:", error);
 
-    // Fallback to mock data if the API call fails
     return [
       {
         exchange: "Binance",

@@ -9,7 +9,7 @@ export default function LatencyPulse({
   speed = 0.5,
   size = 0.035,
 }) {
-  const ref = useRef();
+  const ref = useRef<any>(null);
   const tRef = useRef(0);
 
   useFrame((state, delta) => {
@@ -20,7 +20,7 @@ export default function LatencyPulse({
 
     try {
       const pos = curve.getPoint(tRef.current);
-      if (pos && ref.current.position)
+      if (pos && ref.current?.position)
         ref.current.position.set(pos.x, pos.y, pos.z);
     } catch (err) {
       // defensive: some curve implementations may throw; ignore and skip this frame

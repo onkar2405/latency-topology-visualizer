@@ -1,5 +1,5 @@
 "use client";
-import "./styles/TimeRangeSelector.css";
+import "../styles/TimeRangeSelector.css";
 
 export default function TimeRangeSelector({ value, onChange }) {
   const ranges = ["1h", "24h", "7d", "30d"];
