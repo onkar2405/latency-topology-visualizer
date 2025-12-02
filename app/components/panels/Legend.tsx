@@ -1,7 +1,7 @@
 "use client";
-import CollapsiblePanel from "./common/CollapsiblePanel";
-import { useTheme } from "../context/ThemeContext";
-import "../styles/Legend.css";
+import CollapsiblePanel from "../common/CollapsiblePanel";
+import { useTheme } from "../../context/ThemeContext";
+import "../../styles/Legend.css";
 
 export default function Legend() {
   const theme = useTheme();

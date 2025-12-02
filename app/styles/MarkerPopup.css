@@ -1,9 +1,20 @@
+.popupOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 999;
+  cursor: pointer;
+}
+
 .popup {
   position: fixed;
   padding: 16px;
   border-radius: 8px;
   width: 280px;
-  font-family: sans-serif;
+  font-family: var(--font-roboto, "Roboto", sans-serif);
   z-index: 1000;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
   border: 1px solid var(--panel-border);

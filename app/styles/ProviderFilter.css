@@ -5,7 +5,7 @@
   z-index: 30;
   padding: 12px;
   border-radius: 8px;
-  font-family: sans-serif;
+  font-family: var(--font-roboto, "Roboto", sans-serif);
 }
 
 .label {

@@ -4,13 +4,14 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import { useEffect, useMemo, useState, useRef } from "react";
 
-import Earth from "./Earth";
-import GlobeMarker from "./GlobeMarker";
-import CloudRegion from "./CloudRegion";
-import MarkerPopup from "./MarkerPopup";
-import Legend from "./Legend";
-import LatencyLine from "./LatencyLine";
-import ControlPanel from "./ControlPanel";
+import Earth from "./globe/Earth";
+import GlobeMarker from "./globe/GlobeMarker";
+import CloudRegion from "./globe/CloudRegion";
+import MarkerPopup from "./controls/MarkerPopup";
+import Legend from "./panels/Legend";
+import LatencyLine from "./globe/LatencyLine";
+import ControlPanel from "./panels/ControlPanel";
+import HistoricalTrendsPanel from "./panels/HistoricalTrendsPanel";
 import { useTheme } from "../context/ThemeContext";
 
 import exchangeServers from "../lib/exchangeServerLocations";
@@ -29,9 +30,11 @@ export default function Globe() {
   const [latencyRange, setLatencyRange] = useState("");
   const [layers, setLayers] = useState({
     "Real-Time": true,
-    Historical: true,
     Regions: true,
   });
+  const [historicalPanelOpen, setHistoricalPanelOpen] = useState(false);
+  const [historicalExchange, setHistoricalExchange] = useState<string>();
+  const [historicalRegion, setHistoricalRegion] = useState<string>();
 
   const [metrics, setMetrics] = useState({
     markers: 0,
@@ -101,36 +104,73 @@ export default function Globe() {
 
   // Filtered latency
   const filteredLatency = latencyData.filter((l) => {
+    // Filter by selected exchange first
     if (selectedExchange && l.exchange !== selectedExchange) return false;
+
+    // Filter by latency range if set
     if (latencyRange) {
       const [min, max] = latencyRange.split("-").map(Number);
-      return l.latency >= min && (max ? l.latency <= max : true);
+      if (!(l.latency >= min && (max ? l.latency <= max : true))) return false;
+    }
+
+    // If there's a search query, match by exchange name, provider or server region
+    if (searchQuery && searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      if (l.exchange.toLowerCase().includes(q)) return true;
+      if (l.provider && l.provider.toLowerCase().includes(q)) return true;
+
+      // check server location/region for this exchange
+      const srv = serverCoords.find((s) => s.exchange === l.exchange);
+      if (srv) {
+        if (srv.region && srv.region.toLowerCase().includes(q)) return true;
+      }
+
+      // no match
+      return false;
+    }
+
+    return true;
+  });
+
+  // Filtered cloud regions (also searchable by region name)
+  const filteredRegions = cloudRegions.filter((r) => {
+    if (!providerFilter.includes(r.provider)) return false;
+    if (searchQuery && searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      if (r.region && r.region.toLowerCase().includes(q)) return true;
+      if (r.provider && r.provider.toLowerCase().includes(q)) return true;
+      return false;
     }
     return true;
   });
 
-  // Filtered cloud regions
-  const filteredRegions = cloudRegions.filter((r) =>
-    providerFilter.includes(r.provider)
-  );
-
-  // Update metrics whenever filtered lists change
-  useEffect(() => {
-    setMetrics((prev) => ({
-      ...prev,
-      markers: filteredMarkers.length,
-      latencyLines: filteredLatency.length,
-      regions: filteredRegions.length,
-    }));
-  }, [filteredMarkers, filteredLatency, filteredRegions]);
+  // Metrics are updated by the MetricsUpdater component (uses useFrame)
 
   // Toggle helpers
-  const toggleProvider = (p) =>
-    setProviderFilter((prev) =>
-      prev.includes(p) ? prev.filter((x) => x !== p) : [...prev, p]
-    );
-  const toggleLayer = (key) =>
-    setLayers((prev) => ({ ...prev, [key]: !prev[key] }));
+  const toggleProvider = (p: string) =>
+    setProviderFilter((prev) => {
+      const next = prev.includes(p)
+        ? prev.filter((x) => x !== p)
+        : [...prev, p];
+      console.debug("toggleProvider ->", p, { before: prev, after: next });
+      return next;
+    });
+
+  const toggleLayer = (key: string) =>
+    setLayers((prev) => {
+      const next = { ...prev, [key]: !prev[key] };
+      console.debug("toggleLayer ->", key, { before: prev, after: next });
+      return next;
+    });
+
+  // Log changes to filters/layers for debugging interactive issues
+  useEffect(() => {
+    console.debug("providerFilter changed:", providerFilter);
+  }, [providerFilter]);
+
+  useEffect(() => {
+    console.debug("layers changed:", layers);
+  }, [layers]);
 
   return (
     <div className="container" style={{ backgroundColor: theme.bg.primary }}>
@@ -140,8 +180,15 @@ export default function Globe() {
           selected ? { ...selected, screenPosition: selectedScreenPos } : null
         }
         onClose={() => setSelected(null)}
+        theme={theme}
       />
       <Legend />
+      <HistoricalTrendsPanel
+        isOpen={historicalPanelOpen}
+        onClose={() => setHistoricalPanelOpen(false)}
+        exchangeName={historicalExchange}
+        region={historicalRegion}
+      />
 
       {/* Control Panel */}
       <ControlPanel
@@ -230,6 +277,7 @@ export default function Globe() {
 
             // find nearest cloud region for this server (prefer same provider)
             let endPos = [0, 0, 0];
+            let bestRegion: any = null;
             const sameProviderRegions = regionCoords.filter(
               (r) => r.provider === srv.provider
             );
@@ -250,6 +298,7 @@ export default function Globe() {
                 }
               }
               endPos = best.position;
+              bestRegion = best;
             }
 
             return (
@@ -259,6 +308,13 @@ export default function Globe() {
                 end={endPos}
                 latency={l.latency}
                 showPulse={true}
+                exchangeName={l.exchange}
+                regionName={bestRegion?.region || "Unknown"}
+                onLineClick={(exchange, region) => {
+                  setHistoricalExchange(exchange);
+                  setHistoricalRegion(region);
+                  setHistoricalPanelOpen(true);
+                }}
               />
             );
           })}

@@ -12,6 +12,7 @@ const EXCHANGE_REGIONS = [
   { exchange: "OKX", provider: "AWS", location: "SG" }, // Singapore
   { exchange: "Bybit", provider: "GCP", location: "US" }, // US-central
   { exchange: "Deribit", provider: "Azure", location: "NL" }, // Amsterdam
+  { exchange: "Bitfinex", provider: "AWS", location: "GB" }, // London
   { exchange: "Huobi", provider: "AWS", location: "HK" }, // Hong Kong
   { exchange: "Coinbase", provider: "GCP", location: "US" }, // United States
   { exchange: "Kraken", provider: "Azure", location: "GB" }, // United Kingdom

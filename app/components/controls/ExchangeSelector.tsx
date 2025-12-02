@@ -1,5 +1,5 @@
 "use client";
-import "../styles/ExchangeSelector.css";
+import "../../styles/ExchangeSelector.css";
 
 export default function ExchangeSelector({ exchanges, selected, onChange }) {
   return (

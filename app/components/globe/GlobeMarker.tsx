@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import { useCursor } from "@react-three/drei";
+import * as THREE from "three";
 
 export default function GlobeMarker({ lat, lon, provider, data, onSelect }) {
   // Marker colors per cloud provider
@@ -29,7 +30,7 @@ export default function GlobeMarker({ lat, lon, provider, data, onSelect }) {
   useCursor(true);
 
   return (
-    <mesh
+    <group
       position={position as [number, number, number]}
       onClick={(e) => {
         e.stopPropagation();
@@ -48,12 +49,39 @@ export default function GlobeMarker({ lat, lon, provider, data, onSelect }) {
         document.body.style.cursor = "default";
       }}
     >
-      <sphereGeometry args={[0.045, 16, 16]} />
-      <meshStandardMaterial
-        color={providerColor}
-        emissive={providerColor}
-        emissiveIntensity={0.8}
-      />
-    </mesh>
+      {/* Core sphere for the exchange marker */}
+      <mesh position={[0, 0, 0]}>
+        <sphereGeometry args={[0.045, 16, 16]} />
+        <meshStandardMaterial
+          color={providerColor}
+          emissive={providerColor}
+          emissiveIntensity={0.8}
+        />
+      </mesh>
+
+      {/* Outer ring to differentiate from cloud regions */}
+      <mesh position={[0, 0, 0]}>
+        <torusGeometry args={[0.07, 0.01, 8, 32]} />
+        <meshStandardMaterial
+          color={providerColor}
+          emissive={providerColor}
+          emissiveIntensity={0.6}
+          transparent
+          opacity={0.7}
+        />
+      </mesh>
+
+      {/* Pulsing halo effect for trading hubs */}
+      <mesh position={[0, 0, 0]}>
+        <sphereGeometry args={[0.065, 16, 16]} />
+        <meshStandardMaterial
+          color={providerColor}
+          transparent
+          opacity={0.2}
+          emissive={providerColor}
+          emissiveIntensity={0.4}
+        />
+      </mesh>
+    </group>
   );
 }

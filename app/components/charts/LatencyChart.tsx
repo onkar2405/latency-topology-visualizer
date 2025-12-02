@@ -2,7 +2,7 @@
 
 import { Line } from "react-chartjs-2";
 import { Chart as ChartJS } from "chart.js/auto";
-import "../styles/LatencyChart.css";
+import "../../styles/LatencyChart.css";
 
 export default function LatencyChart({ history }) {
   if (!history || history.length === 0) {

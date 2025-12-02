@@ -1,4 +1,9 @@
+* {
+  font-family: var(--font-roboto, "Roboto", sans-serif);
+}
+
 body {
+  margin: 0;
   background-color: #6d6868;
 }
 
@@ -11,7 +16,7 @@ body {
   color: #fff;
   padding: 16px;
   border-radius: 12px;
-  font-family: "Segoe UI", sans-serif;
+  font-family: var(--font-roboto, "Roboto", sans-serif);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
   z-index: 40; /* less than marker popups but above canvas */
 }
@@ -96,7 +101,7 @@ body {
   color: #f0f0f0;
   padding: 14px;
   border-radius: 12px;
-  font-family: "Segoe UI", sans-serif;
+  font-family: var(--font-roboto, "Roboto", sans-serif);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
   z-index: 40; /* same as ControlPanel */
 }

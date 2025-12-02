@@ -1,11 +1,21 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useRef } from "react";
 import { TubeGeometry, Vector3 } from "three";
 import * as THREE from "three";
 import LatencyPulse from "./LatencyPulse";
 
-export default function LatencyLine({ start, end, latency, showPulse = true }) {
+export default function LatencyLine({
+  start,
+  end,
+  latency,
+  showPulse = true,
+  exchangeName = "",
+  regionName = "",
+  onLineClick = null,
+}) {
+  const meshRef = useRef(null);
+
   const color =
     latency < 60 ? "#00ff6a" : latency < 120 ? "#ffd700" : "#ff4444";
 
@@ -37,9 +47,31 @@ export default function LatencyLine({ start, end, latency, showPulse = true }) {
     [curve]
   );
 
+  const handleClick = (e: any) => {
+    e.stopPropagation();
+    if (onLineClick) {
+      onLineClick(exchangeName, regionName);
+    }
+  };
+
+  const handlePointerOver = (e: any) => {
+    e.stopPropagation();
+    document.body.style.cursor = "pointer";
+  };
+
+  const handlePointerOut = () => {
+    document.body.style.cursor = "default";
+  };
+
   return (
     <group>
-      <mesh geometry={tube}>
+      <mesh
+        ref={meshRef}
+        geometry={tube}
+        onClick={handleClick}
+        onPointerOver={handlePointerOver}
+        onPointerOut={handlePointerOut}
+      >
         <meshBasicMaterial
           color={color}
           transparent

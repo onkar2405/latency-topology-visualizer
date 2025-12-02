@@ -1,7 +1,7 @@
 "use client";
-import CollapsiblePanel from "./common/CollapsiblePanel";
-import { useTheme } from "../context/ThemeContext";
-import "../styles/ControlPanel.css";
+import CollapsiblePanel from "../common/CollapsiblePanel";
+import { useTheme } from "../../context/ThemeContext";
+import "../../styles/ControlPanel.css";
 
 export default function ControlPanel({
   exchanges,
@@ -66,13 +66,15 @@ export default function ControlPanel({
 
         {/* Exchange Selector */}
         <div className="panelSection">
-          <label className="sectionLabel">Exchange</label>
+          <label className="sectionLabel exchangesLabel">
+            📍 EXCHANGES (Trading Hubs)
+          </label>
           <select
             value={selectedExchange}
             onChange={(e) => onExchangeChange(e.target.value)}
             className="inputField mt4"
           >
-            <option value="">All</option>
+            <option value="">All Exchanges</option>
             {exchanges.map((ex) => (
               <option key={ex} value={ex}>
                 {ex}
@@ -83,7 +85,9 @@ export default function ControlPanel({
 
         {/* Cloud Provider Filter */}
         <div className="panelSection">
-          <label className="sectionLabel">Providers</label>
+          <label className="sectionLabel providersLabel">
+            ☁️ CLOUD PROVIDERS (Infrastructure)
+          </label>
           {providers.map((p) => (
             <label key={p} className="checkboxLabel">
               <input
