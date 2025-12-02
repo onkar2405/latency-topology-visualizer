@@ -2,7 +2,7 @@
 
 A real-time 3D globe visualization tool for monitoring latency and topology of cryptocurrency exchanges across different cloud providers. Built with cutting-edge web technologies for an immersive, interactive experience.
 
-![Project Status](https://img.shields.io/badge/status-active-success) ![Version](https://img.shields.io/badge/version-0.1.0-blue) ![License](https://img.shields.io/badge/license-MIT-green)
+![Project Status](https://img.shields.io/badge/status-active-success) ![Version](https://img.shields.io/badge/version-0.1.0-blue)
 
 ## 🌍 Overview
 
@@ -154,10 +154,3 @@ yarn build
 yarn start
 ```
 
-### Supported Exchanges
-
-- **Binance** (AWS - Tokyo)
-- **OKX** (AWS - Tokyo)
-- **Bybit** (GCP - Singapore)
-- **Deribit** (Azure - Amsterdam)
-- **Bitfinex** (AWS - London)
