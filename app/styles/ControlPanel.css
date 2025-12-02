@@ -13,6 +13,11 @@
   border: 1px solid var(--panel-border);
 }
 
+/* Toggle button - hidden by default on desktop */
+.controlPanelToggleBtn {
+  display: none;
+}
+
 .header {
   display: flex;
   justify-content: space-between;
@@ -33,9 +38,6 @@
   font-size: 14px;
   font-weight: bold;
   border: 1px solid var(--panel-border);
-}
-
-.themeToggle {
   background: var(--bg-secondary);
   color: var(--text-primary);
 }
@@ -118,4 +120,261 @@
 /* hide webkit scrollbar inside */
 .controlPanel::-webkit-scrollbar {
   display: none;
+}
+
+/* Tablet & iPad (768px - 1024px) */
+@media (max-width: 1024px) {
+  .controlPanelToggleBtn {
+    display: block;
+    position: fixed;
+    left: 15px;
+    top: 15px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--bg-secondary, #1a1f3a);
+    border: 2px solid var(--panel-border, #444444);
+    color: var(--text-accent, #ffd700);
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 20;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  }
+
+  .controlPanelToggleBtn:hover {
+    transform: scale(1.1);
+  }
+
+  .controlPanel {
+    width: 280px;
+    left: 15px;
+    top: 15px;
+    max-height: 75vh;
+    padding: 12px;
+    opacity: 1;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    visibility: visible;
+  }
+
+  .controlPanel.closed {
+    opacity: 0;
+    transform: translateX(-350px);
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .controlPanel.open {
+    opacity: 1;
+    transform: translateX(0);
+    visibility: visible;
+  }
+
+  .title {
+    font-size: 16px;
+  }
+
+  .panelSection {
+    margin-bottom: 10px;
+  }
+
+  .inputField {
+    padding: 6px;
+    font-size: 13px;
+  }
+
+  .themeToggle {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+}
+
+/* Mobile phones (480px - 767px) */
+@media (max-width: 767px) {
+  .controlPanelToggleBtn {
+    display: block;
+    position: fixed;
+    left: 15px;
+    top: 15px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--bg-secondary, #1a1f3a);
+    border: 2px solid var(--panel-border, #444444);
+    color: var(--text-accent, #ffd700);
+    font-size: 22px;
+    cursor: pointer;
+    z-index: 20;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  }
+
+  .controlPanelToggleBtn:active {
+    transform: scale(0.95);
+  }
+
+  .controlPanel {
+    width: calc(100vw - 30px);
+    max-width: 100%;
+    left: 15px;
+    right: 15px;
+    top: 70px;
+    bottom: auto;
+    max-height: 50vh;
+    padding: 12px;
+    border-radius: 12px;
+    opacity: 1;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    visibility: visible;
+    transform: translateY(0) scale(1);
+  }
+
+  .controlPanel.closed {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .controlPanel.open {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    visibility: visible;
+  }
+
+  .header {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .title {
+    font-size: 14px;
+    flex: 1;
+  }
+
+  .themeToggle {
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+
+  .panelSection {
+    margin-bottom: 8px;
+  }
+
+  .inputField {
+    padding: 6px;
+    font-size: 12px;
+    border-radius: 3px;
+  }
+
+  .sectionLabel {
+    font-size: 11px;
+  }
+
+  .exchangesLabel,
+  .providersLabel {
+    padding: 6px;
+    font-size: 10px;
+    margin-bottom: 6px;
+  }
+
+  .checkboxLabel,
+  .radioLabel {
+    margin-top: 4px;
+    font-size: 12px;
+  }
+
+  .metricsSection {
+    padding: 8px;
+    margin-top: 10px;
+  }
+
+  .metricsText {
+    margin: 3px 0;
+    font-size: 11px;
+  }
+
+  .spaced {
+    margin-left: 4px;
+  }
+}
+
+/* Small mobile phones (320px - 479px) */
+@media (max-width: 479px) {
+  .controlPanelToggleBtn {
+    display: block;
+    position: fixed;
+    left: 10px;
+    top: 10px;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: var(--bg-secondary, #1a1f3a);
+    border: 2px solid var(--panel-border, #444444);
+    color: var(--text-accent, #ffd700);
+    font-size: 20px;
+    cursor: pointer;
+    z-index: 20;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  }
+
+  .controlPanel {
+    width: calc(100vw - 20px);
+    left: 10px;
+    right: 10px;
+    top: 65px;
+    max-height: 45vh;
+    padding: 10px;
+    opacity: 1;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    visibility: visible;
+    transform: translateY(0) scale(1);
+  }
+
+  .controlPanel.closed {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .controlPanel.open {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    visibility: visible;
+  }
+
+  .header {
+    margin-bottom: 10px;
+  }
+
+  .title {
+    font-size: 13px;
+  }
+
+  .themeToggle {
+    padding: 5px 8px;
+    font-size: 10px;
+  }
+
+  .inputField {
+    padding: 5px;
+    font-size: 11px;
+  }
+
+  .sectionLabel {
+    font-size: 10px;
+  }
+
+  .checkboxLabel,
+  .radioLabel {
+    font-size: 11px;
+    margin-top: 3px;
+  }
+
+  .metricsText {
+    font-size: 10px;
+    margin: 2px 0;
+  }
 }
