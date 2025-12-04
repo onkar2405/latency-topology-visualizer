@@ -33,6 +33,42 @@
   font-family: var(--font-roboto, "Roboto", sans-serif);
 }
 
+/* Responsive widths for different screen sizes */
+@media (max-width: 1023px) {
+  .historical-trends-panel {
+    width: 90%;
+    max-width: 500px;
+  }
+}
+
+@media (max-width: 768px) {
+  .historical-trends-panel {
+    width: 95%;
+    max-width: 600px;
+  }
+}
+
+@media (max-width: 480px) {
+  .historical-trends-panel {
+    width: 100%;
+    max-width: none;
+    border-radius: 8px 8px 0 0;
+    height: 90vh;
+    bottom: 0;
+    top: auto;
+    animation: slideInBottom 0.3s ease-in-out;
+  }
+
+  @keyframes slideInBottom {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+}
+
 @keyframes slideIn {
   from {
     transform: translateX(100%);

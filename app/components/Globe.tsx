@@ -8,6 +8,7 @@ import Earth from "./globe/Earth";
 import GlobeMarker from "./globe/GlobeMarker";
 import CloudRegion from "./globe/CloudRegion";
 import MarkerPopup from "./controls/MarkerPopup";
+import ThemeToggle from "./controls/ThemeToggle";
 import Legend from "./panels/Legend";
 import LatencyLine from "./globe/LatencyLine";
 import ControlPanel from "./panels/ControlPanel";
@@ -174,6 +175,9 @@ export default function Globe() {
 
   return (
     <div className="container" style={{ backgroundColor: theme.bg.primary }}>
+      {/* Theme Toggle */}
+      <ThemeToggle />
+
       {/* Popups & Legend */}
       <MarkerPopup
         data={

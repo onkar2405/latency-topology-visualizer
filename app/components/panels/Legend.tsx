@@ -1,5 +1,5 @@
 "use client";
-import CollapsiblePanel from "../common/CollapsiblePanel";
+import ExpandablePanel from "../common/ExpandablePanel";
 import { useTheme } from "../../context/ThemeContext";
 import "../../styles/Legend.css";
 
@@ -17,21 +17,20 @@ export default function Legend() {
     { range: "120+ ms", color: "#ff4444" },
   ];
 
-  return (
-    <div
-      className="legendPanel"
-      style={
-        {
-          background: theme.ui.panel,
-          color: theme.text.primary,
-          ["--panel-border"]: theme.ui.border,
-          ["--text-accent"]: theme.text.accent,
-          ["--text-secondary"]: theme.text.secondary,
-        } as any
-      }
-    >
-      <h4 className="heading">Legend</h4>
+  const themeStyles = {
+    background: theme.ui.panel,
+    color: theme.text.primary,
+    ["--panel-border" as any]: theme.ui.border,
+    ["--text-accent" as any]: theme.text.accent,
+    ["--text-secondary" as any]: theme.text.secondary,
+  } as React.CSSProperties;
 
+  return (
+    <ExpandablePanel
+      title="Legend"
+      panelClassName="legendPanel"
+      themeStyles={themeStyles}
+    >
       <div className="legendSection">
         <p className="legendSectionLabel">Cloud Providers</p>
         {providers.map((p) => (
@@ -59,6 +58,6 @@ export default function Legend() {
           </div>
         ))}
       </div>
-    </div>
+    </ExpandablePanel>
   );
 }

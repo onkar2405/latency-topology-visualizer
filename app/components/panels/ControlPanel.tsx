@@ -1,5 +1,6 @@
 "use client";
 import CollapsiblePanel from "../common/CollapsiblePanel";
+import ExpandablePanel from "../common/ExpandablePanel";
 import { useTheme } from "../../context/ThemeContext";
 import "../../styles/ControlPanel.css";
 
@@ -21,33 +22,22 @@ export default function ControlPanel({
   const theme = useTheme();
   const latencyOptions = ["0-50", "50-100", "100-200", "200+"];
 
-  return (
-    <div
-      className="controlPanel"
-      style={
-        {
-          background: theme.ui.panel,
-          color: theme.text.primary,
-          // expose theme values to CSS via variables
-          ["--panel-border"]: theme.ui.border,
-          ["--text-primary"]: theme.text.primary,
-          ["--text-secondary"]: theme.text.secondary,
-          ["--text-accent"]: theme.text.accent,
-          ["--bg-secondary"]: theme.bg.secondary,
-        } as any
-      }
-    >
-      <div className="header">
-        <h2 className="title">Controls</h2>
-        <button
-          onClick={theme.toggleTheme}
-          className="themeToggle"
-          title="Toggle dark/light mode"
-        >
-          {theme.isDark ? "☀️ Light" : "🌙 Dark"}
-        </button>
-      </div>
+  const themeStyles = {
+    background: theme.ui.panel,
+    color: theme.text.primary,
+    ["--panel-border" as any]: theme.ui.border,
+    ["--text-primary" as any]: theme.text.primary,
+    ["--text-secondary" as any]: theme.text.secondary,
+    ["--text-accent" as any]: theme.text.accent,
+    ["--bg-secondary" as any]: theme.bg.secondary,
+  } as React.CSSProperties;
 
+  return (
+    <ExpandablePanel
+      title="Controls"
+      panelClassName="controlPanel"
+      themeStyles={themeStyles}
+    >
       <CollapsiblePanel
         title="Filters & Layers"
         id="control-panel-content"
@@ -140,6 +130,6 @@ export default function ControlPanel({
           <p className="metricsText">FPS: {metrics.fps}</p>
         </div>
       </CollapsiblePanel>
-    </div>
+    </ExpandablePanel>
   );
 }

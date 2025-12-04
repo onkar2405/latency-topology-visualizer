@@ -1,4 +1,4 @@
-// Next.js API route handler - this runs on the server, not in the browser
+// Next.js API route handler - this runs on the server.
 // This bypasses CORS restrictions since server-to-server calls don't have CORS limitations
 
 const CLOUDFLARE_API_TOKEN =
@@ -7,6 +7,7 @@ const CLOUDFLARE_API_TOKEN =
 const CLOUDFLARE_ENDPOINT =
   "https://api.cloudflare.com/client/v4/radar/quality/iqi/summary";
 
+// Define exchanges and their corresponding Cloudflare locations to fetch latency data for.
 const EXCHANGE_REGIONS = [
   { exchange: "Binance", provider: "AWS", location: "JP" }, // Tokyo
   { exchange: "OKX", provider: "AWS", location: "SG" }, // Singapore
@@ -20,6 +21,11 @@ const EXCHANGE_REGIONS = [
   { exchange: "Gate.io", provider: "GCP", location: "BR" }, // Brazil
 ];
 
+/**
+ * API route handler for fetching current latency data from Cloudflare Radar API.
+ * @param request The incoming Next.js request object.
+ * @returns A JSON response containing current latency data for various exchanges.
+ */
 export async function GET(request: Request) {
   try {
     console.log(
