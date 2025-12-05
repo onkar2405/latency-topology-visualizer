@@ -19,7 +19,21 @@ import exchangeServers from "../lib/exchangeServerLocations";
 import cloudRegions from "../lib/cloudRegions";
 import { fetchLatency } from "../lib/latencyAPI";
 import "../styles/Globe.css";
+import {
+  AMBIENT_LIGHT_INTENSITY,
+  CAMERA_SETTINGS,
+  DIRECTIONAL_LIGHT,
+  ORBIT_CONTROLS_SETTINGS,
+} from "../constants";
 
+/**
+ * Main Globe component rendering the 3D Earth visualization with markers, regions, and latency lines.
+ * This component has following components:
+ * - ThemeToggle: Button to switch between light and dark themes.
+ * - MarkerPopup: Popup displaying detailed information about selected markers or regions.
+ * - Legend: Panel explaining color codes for cloud providers and latency ranges.
+ * - ControlPanel: Panel for filtering exchanges, providers, latency ranges, and toggling layers.
+ */
 export default function Globe() {
   const theme = useTheme();
   const [selected, setSelected] = useState(null);
@@ -164,15 +178,6 @@ export default function Globe() {
       return next;
     });
 
-  // Log changes to filters/layers for debugging interactive issues
-  useEffect(() => {
-    console.debug("providerFilter changed:", providerFilter);
-  }, [providerFilter]);
-
-  useEffect(() => {
-    console.debug("layers changed:", layers);
-  }, [layers]);
-
   return (
     <div className="container" style={{ backgroundColor: theme.bg.primary }}>
       {/* Theme Toggle */}
@@ -212,9 +217,17 @@ export default function Globe() {
       />
 
       {/* Canvas */}
-      <Canvas camera={{ position: [0, 0, 5], fov: 45 }}>
-        <ambientLight intensity={0.6} />
-        <directionalLight position={[5, 5, 5]} intensity={1.2} />
+      <Canvas
+        camera={{
+          position: CAMERA_SETTINGS.POSITION,
+          fov: CAMERA_SETTINGS.FOV,
+        }}
+      >
+        <ambientLight intensity={AMBIENT_LIGHT_INTENSITY} />
+        <directionalLight
+          position={DIRECTIONAL_LIGHT.POSITION}
+          intensity={DIRECTIONAL_LIGHT.INTENSITY}
+        />
 
         {/* Globe */}
         <Earth />
@@ -336,19 +349,20 @@ export default function Globe() {
           enablePan={true}
           enableZoom={true}
           enableRotate={true}
-          rotateSpeed={0.4}
-          zoomSpeed={0.6}
-          panSpeed={0.5}
+          rotateSpeed={ORBIT_CONTROLS_SETTINGS.ROTATE_SPEED}
+          zoomSpeed={ORBIT_CONTROLS_SETTINGS.ZOOM_SPEED}
+          panSpeed={ORBIT_CONTROLS_SETTINGS.PAN_SPEED}
         />
       </Canvas>
     </div>
   );
 }
 
-// ✅ MetricsUpdater Component
+// Child component to update metrics using useFrame.
 function MetricsUpdater({ setMetrics, markers, latencyLines, regions }) {
   const fpsRef = useRef(0);
 
+  // useFrame is used here to update FPS and other metrics on each frame render
   useFrame((state) => {
     fpsRef.current = state.clock.getElapsedTime();
     setMetrics((prev) => ({

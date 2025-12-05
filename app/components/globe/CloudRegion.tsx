@@ -2,6 +2,10 @@
 
 import { useMemo } from "react";
 import * as THREE from "three";
+import {
+  REGION_DIMENSIONS,
+  REGION_OUTER_MARK_DIMENSIONS,
+} from "../../constants";
 
 export default function CloudRegion({
   lat,
@@ -53,35 +57,18 @@ export default function CloudRegion({
 
   return (
     <group>
-      {/* Main cloud region sphere - larger and more translucent */}
-      <mesh
-        position={position as [number, number, number]}
-        onClick={(e) => {
-          const screenPos = {
-            x: e.clientX || e.nativeEvent?.clientX || window.innerWidth / 2,
-            y: e.clientY || e.nativeEvent?.clientY || window.innerHeight / 2,
-          };
-          onClick({ provider, lat, lon, serverCount }, screenPos);
-        }}
-      >
-        <sphereGeometry args={[0.12, 24, 24]} />
-        <meshStandardMaterial
-          color={baseColor}
-          transparent
-          opacity={sphereOpacity}
-          metalness={0}
-          roughness={0.6}
-          emissive={baseColor}
-          emissiveIntensity={0.15}
-        />
-      </mesh>
-
       {/* Outer boundary ring - distinctive for cloud regions */}
       <mesh
         position={ringPosition as [number, number, number]}
         quaternion={quaternion}
       >
-        <ringGeometry args={[0.22, 0.38, 64]} />
+        <ringGeometry
+          args={[
+            REGION_DIMENSIONS.RING_INNER_RADIUS,
+            REGION_DIMENSIONS.RING_OUTER_RADIUS,
+            REGION_DIMENSIONS.SEGMENTS,
+          ]}
+        />
         <meshBasicMaterial
           color={baseColor}
           transparent
@@ -96,7 +83,14 @@ export default function CloudRegion({
         position={ringPosition as [number, number, number]}
         quaternion={quaternion}
       >
-        <torusGeometry args={[0.3, 0.01, 4, 16]} />
+        <torusGeometry
+          args={[
+            REGION_OUTER_MARK_DIMENSIONS.RING_INNER_RADIUS,
+            REGION_OUTER_MARK_DIMENSIONS.TUBE_THICKNESS,
+            REGION_OUTER_MARK_DIMENSIONS.RADIAL_SENGMENTS,
+            REGION_OUTER_MARK_DIMENSIONS.TUBULAR_SEGMENTS,
+          ]}
+        />
         <meshBasicMaterial
           color={baseColor}
           transparent

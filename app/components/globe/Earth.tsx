@@ -2,16 +2,16 @@
 
 import { useLoader } from "@react-three/fiber";
 import { TextureLoader } from "three";
+import { EARTH_DIMENTIONS, EARTH_IMG_URL } from "../../constants";
 
 export default function Earth() {
-  const earthTexture = useLoader(
-    TextureLoader,
-    "https://neo.gsfc.nasa.gov/archive/bluemarble/bmng/world_8km/world.topo.bathy.200412.3x5400x2700.jpg"
-  );
+  const earthTexture = useLoader(TextureLoader, EARTH_IMG_URL);
+
+  const { RADIUS, WIDTH_SEGMENTS, HEIGHT_SEGMENTS } = EARTH_DIMENTIONS;
 
   return (
     <mesh>
-      <sphereGeometry args={[2, 64, 64]} />
+      <sphereGeometry args={[RADIUS, WIDTH_SEGMENTS, HEIGHT_SEGMENTS]} />
       <meshStandardMaterial map={earthTexture} />
     </mesh>
   );

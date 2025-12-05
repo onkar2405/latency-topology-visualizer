@@ -12,6 +12,7 @@ export default function LatencyPulse({
   const ref = useRef<any>(null);
   const tRef = useRef(0);
 
+  // We are calculating the position along the curve based on time and speed
   useFrame((state, delta) => {
     if (!curve || typeof curve.getPoint !== "function" || !ref.current) return;
 
@@ -23,8 +24,8 @@ export default function LatencyPulse({
       if (pos && ref.current?.position)
         ref.current.position.set(pos.x, pos.y, pos.z);
     } catch (err) {
-      // defensive: some curve implementations may throw; ignore and skip this frame
-      // console.warn("LatencyPulse: curve.getPoint error", err);
+      // Catch is not ideal but three.js curves can be unpredictable
+      console.error("Error getting point on curve:", err);
     }
   });
 
